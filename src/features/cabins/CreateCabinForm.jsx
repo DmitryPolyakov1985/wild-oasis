@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
 function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
+  const queryClient = useQueryClient();
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
 
@@ -17,8 +18,6 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
-
-  const queryClient = useQueryClient();
 
   const { mutate: createCabin, isLoading: isCreating } = useMutation({
     mutationFn: createEditCabin,
@@ -41,7 +40,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
     onError: (err) => toast.error(err.message),
   });
 
-  const isWorking = isCreating || isEditing;
+  const isCreatingOrEditing = isCreating || isEditing;
 
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
@@ -63,7 +62,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         <Input
           type="text"
           id="name"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           {...register("name", {
             required: "This field is required",
           })}
@@ -74,7 +73,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         <Input
           type="number"
           id="maxCapacity"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           {...register("maxCapacity", {
             required: "This field is required",
             min: {
@@ -89,7 +88,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         <Input
           type="number"
           id="regularPrice"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           {...register("regularPrice", {
             required: "This field is required",
             min: {
@@ -104,7 +103,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         <Input
           type="number"
           id="discount"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           {...register("discount", {
             required: "This field is required",
             validate: (value) =>
@@ -122,7 +121,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         <Textarea
           type="number"
           id="description"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           {...register("description", {
             required: "This field is required",
           })}
@@ -133,7 +132,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
       <FormRow label="Cabin photo">
         <FileInput
           id="image"
-          disabled={isWorking}
+          disabled={isCreatingOrEditing}
           accept="image/*"
           {...register("image", {
             required: isEditSession ? false : "This field is required",
@@ -152,7 +151,7 @@ function CreateEditCabinForm({ cabinToEdit = {}, showForm }) {
         >
           Cancel
         </Button>
-        <Button disabled={isWorking}>
+        <Button disabled={isCreatingOrEditing}>
           {isEditSession ? "Edit Cabin" : "Create new cabin"}
         </Button>
       </FormRow>
