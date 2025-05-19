@@ -5,7 +5,10 @@ function SortBy({ options }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get("sortBy") || "";
 
+  const page = searchParams.get("page");
   function handleChange(e) {
+    if (page) searchParams.delete("page");
+
     searchParams.set("sortBy", e.target.value);
     setSearchParams(searchParams);
   }
